@@ -10,6 +10,8 @@ function StringArtGenerator(canvas) {
     this.manualQueue = []
     this.manualShowAll = false
     this.manualRecord = null
+    this.isGifRecording = false
+    this.gifRecorder = null
 }
 
 StringArtGenerator.prototype.SelectImage = function(e) {
@@ -258,6 +260,9 @@ StringArtGenerator.prototype.EndGenerate = function() {
     this.resetBtn.removeAttribute('disabled')
     this.selectBtn.removeAttribute('disabled')
     this.linesCountBox.removeAttribute('disabled')
+
+    if (this.isGifRecording)
+        this.StopGifRecording(true)
 }
 
 StringArtGenerator.prototype.RecordStep = function(fromIndex, toIndex) {
@@ -282,6 +287,7 @@ StringArtGenerator.prototype.GenerateIteration = function(nail, linesCount, tota
     this.RecordStep(nail, next.nail)
     this.RemoveLine(next.line, lineWeight)
     this.DrawLine(this.nails[nail], this.nails[next.nail], lineColor)
+    this.CaptureGifFrame()
 
     window.requestAnimationFrame(() => this.GenerateIteration(next.nail, linesCount - 1, totalCount, lineWeight, lineColor, startTime))
 }
@@ -363,6 +369,59 @@ StringArtGenerator.prototype.SetScale = function(scale, x, y) {
     this.imgScale = scale
     this.imgX = x - dx * this.imgScale
     this.imgY = y - dy * this.imgScale
+}
+
+StringArtGenerator.prototype.StartGifRecording = function() {
+    if (typeof GIF === 'undefined') {
+        this.UpdateGifStatus(I18N.gif.unsupported)
+        return
+    }
+
+    if (this.isGifRecording) {
+        this.UpdateGifStatus(I18N.gif.recording)
+        return
+    }
+
+    this.gifRecorder = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: 'https://unpkg.com/gif.js@0.2.0/dist/gif.worker.js'
+    })
+
+    this.gifRecorder.on('finished', (blob) => {
+        let link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = 'string-art.gif'
+        link.click()
+        this.UpdateGifStatus(I18N.gif.done)
+    })
+
+    this.isGifRecording = true
+    this.UpdateGifStatus(I18N.gif.recording)
+}
+
+StringArtGenerator.prototype.StopGifRecording = function(autoStop = false) {
+    if (!this.isGifRecording || !this.gifRecorder) {
+        if (!autoStop)
+            this.UpdateGifStatus(I18N.gif.needStart)
+        return
+    }
+
+    this.isGifRecording = false
+    this.UpdateGifStatus(I18N.gif.rendering)
+    this.gifRecorder.render()
+}
+
+StringArtGenerator.prototype.CaptureGifFrame = function() {
+    if (!this.isGifRecording || !this.gifRecorder)
+        return
+
+    this.gifRecorder.addFrame(this.canvas, { copy: true, delay: 16 })
+}
+
+StringArtGenerator.prototype.UpdateGifStatus = function(message) {
+    if (this.gifStatusBox)
+        this.gifStatusBox.innerHTML = message
 }
 
 StringArtGenerator.prototype.SwitchMode = function() {

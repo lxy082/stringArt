@@ -45,6 +45,15 @@ const I18N = {
         loaded: '记录已加载，按步骤开始连线。',
         notFound: '未找到该记录。'
     },
+    gif: {
+        unsupported: '当前浏览器不支持 GIF 录制。',
+        start: '开始录制 GIF',
+        stop: '停止并导出 GIF',
+        recording: '正在录制 GIF…',
+        rendering: '正在生成 GIF，请稍候…',
+        done: 'GIF 已生成并开始下载。',
+        needStart: '请先开始录制 GIF。'
+    },
     manual: {
         invalidInput: '请输入有效的起点与终点编号。',
         outOfRange: (max) => `编号超出范围，请输入 1 到 ${max}。`,
