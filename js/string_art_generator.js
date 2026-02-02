@@ -4,6 +4,7 @@ function StringArtGenerator(canvas) {
     this.InitControls()
     this.InitSave()
     this.InitEvents()
+    this.SwitchMode()
 
     this.steps = []
     this.manualQueue = []

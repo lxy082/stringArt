@@ -150,7 +150,6 @@ StringArtGenerator.prototype.InitControls = function() {
 
     this.UpdateContrast()
     this.UpdateBrightness()
-    this.SwitchMode()
 }
 
 StringArtGenerator.prototype.InitSave = function() {
