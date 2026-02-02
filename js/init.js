@@ -95,12 +95,6 @@ StringArtGenerator.prototype.InitControls = function() {
     this.saveRecordBtn = document.getElementById('save-record-btn')
     this.saveRecordBtn.addEventListener('click', () => this.SaveRecord())
 
-    this.gifStartBtn = document.getElementById('gif-start-btn')
-    this.gifStopBtn = document.getElementById('gif-stop-btn')
-    this.gifStatusBox = document.getElementById('gif-status-box')
-    this.gifStartBtn.addEventListener('click', () => this.StartGifRecording())
-    this.gifStopBtn.addEventListener('click', () => this.StopGifRecording())
-
     this.recordSelectBox = document.getElementById('record-select-box')
     this.refreshRecordsBtn = document.getElementById('refresh-records-btn')
     this.refreshRecordsBtn.addEventListener('click', () => this.RefreshRecordList())
